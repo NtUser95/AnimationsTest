@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        app:constraintSetEnd="@id/end"
+        app:constraintSetStart="@+id/start"
+        app:duration="1500">
+        <OnSwipe app:targetId="@id/swipe_button" app:dragDirection="dragDown"/>
+        <KeyFrameSet>
+
+            <KeyAttribute
+                android:rotationY="0"
+                app:framePosition="50"
+                app:motionTarget="@+id/swipe_button" />
+
+            <KeyAttribute
+                android:rotationY="180"
+                app:framePosition="50"
+                app:motionTarget="@+id/swipe_button" />
+
+            <KeyAttribute
+                android:rotationY="360"
+                app:framePosition="100"
+                app:motionTarget="@+id/swipe_button" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint android:id="@+id/swipe_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <CustomAttribute
+                app:attributeName="BackgroundColor"
+                app:customColorValue="@color/black" />
+            <CustomAttribute
+                app:attributeName="TextColor"
+                app:customColorValue="@color/white" />
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint android:id="@id/swipe_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:textColor="@color/white">
+
+            <CustomAttribute
+                app:attributeName="BackgroundColor"
+                app:customColorValue="@color/cardview_light_background" />
+            <CustomAttribute
+                app:attributeName="TextColor"
+                app:customColorValue="@color/black" />
+            <Transform android:rotation="360"/>
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>
