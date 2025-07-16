@@ -31,5 +31,54 @@
             android:text="Swipe Floating btn"
             android:gravity="center"/>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/delayed_animations"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/delayed_btn1"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="delayed btn 1"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/delayed_btn1"
+                app:layout_constraintEnd_toStartOf="@id/delayed_btn2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="Hello world!"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/delayed_btn2"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="delayed btn 2"
+                android:gravity="center"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/animated_vector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/animated_vector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </FrameLayout>

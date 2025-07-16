@@ -2,9 +2,16 @@ package com.example.otusanimationsproj
 
 import android.animation.Animator
 import android.graphics.Color
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.Fade
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -36,22 +43,75 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        delayedAnimationsSetup()
+        dvdAnimationSetup()
+        animatedVectorSetup()
+    }
+
+    private fun animatedVectorSetup() {
+        findViewById<ImageView>(R.id.animated_vector).setOnClickListener {
+            ((it as ImageView).getDrawable() as AnimatedVectorDrawable).start()
+        }
+    }
+
+    private fun delayedAnimationsSetup() {
+        val group = findViewById<ViewGroup>(R.id.delayed_animations)
+        val btn1 = group.findViewById<View>(R.id.delayed_btn1)
+        val btn2 = group.findViewById<View>(R.id.delayed_btn2)
+        btn1.setOnClickListener {
+            TransitionManager.beginDelayedTransition(
+                findViewById<ViewGroup>(R.id.delayed_animations),
+                TransitionSet().apply {
+                    ordering = TransitionSet.ORDERING_TOGETHER
+                    duration = 1500
+                    addTransition(ChangeBounds())
+                    addTransition(Fade(Fade.IN))
+                    addTransition(Fade(Fade.OUT))
+                }
+            )
+            btn1.visibility = View.INVISIBLE
+            btn2.visibility = View.VISIBLE
+        }
+        btn2.setOnClickListener {
+            TransitionManager.beginDelayedTransition(
+                findViewById<ViewGroup>(R.id.delayed_animations),
+                TransitionSet().apply {
+                    ordering = TransitionSet.ORDERING_SEQUENTIAL
+                    duration = 1500
+                    addTransition(ChangeBounds())
+                    addTransition(Fade(Fade.IN))
+                    addTransition(Fade(Fade.OUT))
+                }
+            )
+            btn2.visibility = View.INVISIBLE
+            btn1.visibility = View.VISIBLE
+        }
+    }
+
+    /**
+     * Чисто по приколу анимацию с плавающим квадратиком DVD из телевизора сделал через MotionLayout
+     */
+    private fun dvdAnimationSetup() {
         dvdButton = findViewById<TextView>(R.id.dvd_button)
         val parent = dvdButton?.parent as View?
         parent?.getViewTreeObserver()
             ?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     parent.getViewTreeObserver()?.removeOnGlobalLayoutListener(this)
-                    endY = parent.height.toFloat() - resources.getDimensionPixelSize(R.dimen._50dp) - parent.paddingBottom
-                    endX = parent.width.toFloat() - resources.getDimensionPixelSize(R.dimen._100dp) - parent.paddingEnd
+                    endY =
+                        parent.height.toFloat() - resources.getDimensionPixelSize(R.dimen._50dp) - parent.paddingBottom
+                    endX =
+                        parent.width.toFloat() - resources.getDimensionPixelSize(R.dimen._100dp) - parent.paddingEnd
                     leftX = parent.paddingStart.toFloat()
                     leftY = parent.paddingTop.toFloat()
 
                     lifecycleScope.launch {
-                        updateFlow.emit(MoveToNextLocationEvent(
-                            Location(x = leftX+1, leftY+1),
-                            Velocity(Random.nextFloat() * 10, Random.nextFloat() * 10),
-                        ))
+                        updateFlow.emit(
+                            MoveToNextLocationEvent(
+                                Location(x = leftX + 1, leftY + 1),
+                                Velocity(Random.nextFloat() * 10, Random.nextFloat() * 10),
+                            )
+                        )
                     }
                 }
             })
@@ -100,8 +160,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @Throws(RuntimeException::class)
     private fun raytracePath(curLoc: Location, curVelocity: Velocity): CollisionResult {
-        if (curVelocity.x == 0F || curVelocity.y == 0F) throw RuntimeException("Invalid velocity")
+        if (curVelocity.x == 0F && curVelocity.y == 0F) throw RuntimeException("Invalid velocity")
 
         var x = curLoc.x
         var y = curLoc.y
@@ -133,6 +194,7 @@ data class Collision(
     val right: Boolean = false,
     val bottom: Boolean = false,
 )
+
 data class CollisionResult(val atLoc: Location, val collisionDir: Collision)
 data class Location(val x: Float, val y: Float)
 data class Velocity(val x: Float, val y: Float)
