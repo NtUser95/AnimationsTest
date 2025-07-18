@@ -27,7 +27,7 @@
                 android:valueFrom="M 6 6 L 74 6"
                 android:valueTo="M 6 6 L 1 6"
                 android:valueType="pathType"
-                android:interpolator="@android:anim/linear_interpolator"/>
+                android:interpolator="@android:anim/bounce_interpolator"/>
         </aapt:attr>
     </target>
 </animated-vector>

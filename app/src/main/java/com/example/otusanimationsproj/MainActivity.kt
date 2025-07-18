@@ -11,13 +11,16 @@ import android.transition.TransitionSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -117,12 +120,14 @@ class MainActivity : AppCompatActivity() {
             })
 
         lifecycleScope.launch {
-            updateFlow.collect {
-                if (it is MoveToNextLocationEvent) {
-                    runCycle(
-                        it.location,
-                        it.velocity,
-                    )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                updateFlow.collect {
+                    if (it is MoveToNextLocationEvent) {
+                        runCycle(
+                            it.location,
+                            it.velocity,
+                        )
+                    }
                 }
             }
         }
@@ -135,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             .x(targetLoc.atLoc.x)
             .y(targetLoc.atLoc.y)
             .setDuration(5000)
+            .setInterpolator(LinearInterpolator()) // BounceInterpolator()
             .setListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}
                 override fun onAnimationCancel(animation: Animator) {}

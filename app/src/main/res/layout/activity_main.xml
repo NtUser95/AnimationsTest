@@ -52,7 +52,8 @@
                 app:layout_constraintEnd_toStartOf="@id/delayed_btn2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="Hello world!"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/delayed_btn2"
